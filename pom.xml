@@ -22,7 +22,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <jib-maven-plugin.version>2.7.1</jib-maven-plugin.version>
+        <jib-maven-plugin.version>3.1.1</jib-maven-plugin.version>
         <jib-docker-image>adoptopenjdk:11-jre-hotspot</jib-docker-image>
         <sonar-maven-plugin.version>3.8.0.2131</sonar-maven-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
