@@ -1,26 +1,29 @@
 
 pipeline {
-    agent any
+   agent {
+          docker {
+            image 'maven:3.8.1-adoptopenjdk-11'
+            args '-v $HOME/.m2:/root/.m2'
+            reuseNode true
+          }
+   }
     environment {
-        IMAGE_REGISTRY = 'suayb/golang-echo-graphql-example'
-        IMAGE_VERSION = '1.0.0'
+        IMAGE_REGISTRY = 'dockerhub.detaysoft.com/das/das-api'
+        IMAGE_VERSION = 'latest'
         IMAGE_REGISTRY_CREDENTIAL = 'dockerhubcreds'
+        DOCKER_REGISTRY_URL = ""
     }
     stages {
-        stage('SonarQube analysis') {
-            steps {
-                script {
-                  scannerHome = tool 'sonarqube'
-                }
-                withSonarQubeEnv('sonarqube') {
-                  sh "${scannerHome}/bin/sonar-scanner \
-                  -D sonar.login=admin \
-                  -D sonar.password=root \
-                  -D sonar.projectKey=spring-boot-sonarqube-measurement-example \
-                  -D sonar.exclusions=**/*.xml \
-                  -D sonar.host.url=http://192.168.1.35:9000/"
-                }
-            }
+        stage('SonarQube Analysis') {
+           steps {
+             sh "mvn verify sonar:sonar"
+           }
         }
+
+       stage('Build') {
+          steps {
+            sh "mvn compile jib:dockerBuild"
+          }
+       }
     }
 }

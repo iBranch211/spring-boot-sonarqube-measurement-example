@@ -30,7 +30,9 @@
 
         <!-- test result measurements -->
         <project.test.result.directory>${project.build.directory}/test-results</project.test.result.directory>
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.host.url>http://192.168.1.35:9000</sonar.host.url>
+        <sonar.login>admin</sonar.login>
+        <sonar.password>root</sonar.password>
         <sonar.scm.provider>git</sonar.scm.provider>
         <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
         <sonar.coverage.jacoco.xmlReportPaths>${project.test.result.directory}/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
