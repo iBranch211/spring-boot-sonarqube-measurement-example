@@ -1,5 +1,6 @@
 
 pipeline {
+    agent any
     environment {
         IMAGE_REGISTRY = 'dockerhub.detaysoft.com/das/das-api'
         IMAGE_VERSION = 'latest'
