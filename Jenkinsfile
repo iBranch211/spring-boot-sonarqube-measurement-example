@@ -13,15 +13,9 @@ pipeline {
         DOCKER_REGISTRY_URL = ""
     }
     stages {
-        stage('Testing') {
-           steps {
-             sh "mvn verify"
-           }
-        }
-
         stage('SonarQube Analysis') {
            steps {
-             sh "mvn initialize sonar:sonar"
+             sh "mvn verify sonar:sonar"
            }
         }
 
