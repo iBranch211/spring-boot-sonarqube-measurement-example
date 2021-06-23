@@ -16,6 +16,7 @@ pipeline {
               -D sonar.projectKey=spring-boot-sonarqube-measurement-example \
               -D sonar.exclusions=vendor/**,resources/**,**/*.java \
               -D sonar.host.url=http://192.168.1.35:9000/"
+            }
         }
     }
 }
