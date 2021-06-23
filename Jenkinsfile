@@ -3,6 +3,7 @@ pipeline {
    agent {
           docker {
             image 'maven:3.8.1-adoptopenjdk-11'
+            args '-v $HOME/.m2:/root/.m2'
             reuseNode true
           }
    }
@@ -13,15 +14,21 @@ pipeline {
         DOCKER_REGISTRY_URL = ""
     }
     stages {
+        stage('Testing') {
+           steps {
+             sh "mvn verify"
+           }
+        }
+
         stage('SonarQube Analysis') {
            steps {
-             sh "mvn verify sonar:sonar"
+             sh "mvn initialize sonar:sonar"
            }
         }
 
        stage('Build') {
           steps {
-            sh "mvn compile jib:dockerBuild"
+            sh "mvn jib:dockerBuild"
           }
        }
     }
