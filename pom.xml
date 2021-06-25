@@ -24,24 +24,10 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <jib-maven-plugin.version>3.1.1</jib-maven-plugin.version>
         <jib-docker-image>adoptopenjdk:11-jre-hotspot</jib-docker-image>
-        <sonar-maven-plugin.version>3.8.0.2131</sonar-maven-plugin.version>
+        <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
+        <sonar-maven-plugin.version>3.9.0.2155</sonar-maven-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
-
-        <!-- test result measurements -->
-        <project.test.result.directory>${project.build.directory}/test-results</project.test.result.directory>
-        <sonar.host.url>http://192.168.1.35:9000</sonar.host.url>
-        <sonar.login>admin</sonar.login>
-        <sonar.password>root</sonar.password>
-        <sonar.scm.provider>git</sonar.scm.provider>
-        <sonar.java.codeCoveragePlugin>jacoco</sonar.java.codeCoveragePlugin>
-        <sonar.coverage.jacoco.xmlReportPaths>${project.test.result.directory}/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.exclusions>
-            **/*.xml
-        </sonar.exclusions>
-        <sonar.coverage.exclusions>
-            **/qualitymeasurementsample/*
-        </sonar.coverage.exclusions>
     </properties>
 
 
@@ -75,6 +61,24 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>${properties-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>sonar-project.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>${sonar-maven-plugin.version}</version>
@@ -84,8 +88,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <argLine>${jacocoArgLine}</argLine>
-                    <reportsDirectory>${project.test.result.directory}/surefire</reportsDirectory>
+                    <!-- Force alphabetical order to have a reproducible build -->
+                    <runOrder>alphabetical</runOrder>
+                    <excludes>
+                        <exclude>**/*IT*</exclude>
+                        <exclude>**/*IntTest*</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -94,25 +102,32 @@
                 <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>pre-test</id>
+                        <id>pre-unit-tests</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <propertyName>jacocoArgLine</propertyName>
-                            <destFile>${project.test.result.directory}/jacoco/jacoco.exec</destFile>
-                        </configuration>
                     </execution>
+                    <!-- Ensures that the code coverage report for unit tests is created after unit tests have been run -->
                     <execution>
-                        <id>post-test</id>
+                        <id>post-unit-test</id>
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <dataFile>${project.test.result.directory}/jacoco/jacoco.exec</dataFile>
-                            <outputDirectory>${project.test.result.directory}/jacoco</outputDirectory>
-                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>pre-integration-tests</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                    </execution>
+                    <!-- Ensures that the code coverage report for integration tests is created after integration tests have been run -->
+                    <execution>
+                        <id>post-integration-tests</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report-integration</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
