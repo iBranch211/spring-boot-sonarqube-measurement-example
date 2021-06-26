@@ -14,7 +14,7 @@ docker-compose -f sonarqube/docker-compose.yml up -d
 Change sonarqube admin password
 
 ```sh
-curl -u admin:admin -X POST "http://localhost:9000/api/users/change_password?login=admin&previousPassword=admin&password=root"
+curl -u admin:admin -X POST "http://localhost:9000/sonarqube/api/users/change_password?login=admin&previousPassword=admin&password=root"
 ```
 
 Create project in sonarqube with this project key 
@@ -28,7 +28,7 @@ spring-boot-sonarqube-measurement-example
 Edit these properties in json files sonar-project.properties.
 
 ```sh
-sonar.host.url=http://localhost:9000
+sonar.host.url=http://localhost:9000/sonarqube
 sonar.login=admin
 sonar.password=root
 ```
