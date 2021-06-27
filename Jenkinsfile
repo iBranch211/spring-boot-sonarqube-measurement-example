@@ -13,11 +13,16 @@ pipeline {
         DOCKER_REGISTRY_URL = ""
     }
     stages {
-        stage('SonarQube Analysis') {
+         stage('Code Quality Check via SonarQube') {
            steps {
-             sh "mvn verify sonar:sonar"
+                script {
+                 def scannerHome = tool 'sonarqube';
+                 withSonarQubeEnv("sonarqube") {
+                   sh "${tool("sonarqube")}/bin/sonar-scanner"
+                }
+             }
            }
-        }
+         }
 
        stage('Build') {
           steps {
