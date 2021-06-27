@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:
-    image: app:${SERVICE_IMAGE_TAG}
+    image: suayb/spring-boot-sonarqube-measurement-example:${SERVICE_IMAGE_TAG}
     container_name: app
     restart: ${RESTART_POLICY}
     networks:

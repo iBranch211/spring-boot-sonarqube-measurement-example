@@ -29,5 +29,20 @@ pipeline {
             sh "mvn jib:dockerBuild"
           }
        }
+
+       stage('Docker Publish') {
+          steps {
+            withDockerRegistry([credentialsId: "${IMAGE_REGISTRY_CREDENTIAL}", url: ""]) {
+              sh "docker push ${IMAGE_REGISTRY}:${IMAGE_VERSION}"
+            }
+          }
+       }
+
+       stage('Deploy Docker-compose') {
+         steps {
+           sh "docker-compose pull"
+           sh "docker-compose up -d --remove-orphans"
+         }
+       }
     }
 }
