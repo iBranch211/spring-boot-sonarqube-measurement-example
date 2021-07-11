@@ -7,8 +7,8 @@ pipeline {
           }
    }
     environment {
-        IMAGE_REGISTRY = 'dockerhub.detaysoft.com/das/das-api'
-        IMAGE_VERSION = 'latest'
+        IMAGE_REGISTRY = 'suayb/spring-boot-sonarqube-measurement-example'
+        IMAGE_VERSION = '1.0.0'
         IMAGE_REGISTRY_CREDENTIAL = 'dockerhubcreds'
         DOCKER_REGISTRY_URL = ""
     }
